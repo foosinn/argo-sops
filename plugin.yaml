@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gsm-replacer
+  namespace: {{ .Release.Namespace }}
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: kustomize-sops
+    spec:
+      allowConcurrency: true
+      lockRepo: false
+      generate:
+        command:
+          - /usr/bin/bash
+          - "-c"
+          - |
+            set -euo pipefail
+            grep -r ^sops:$ -l -Z | xargs -0 -n1 sops decrypt -i
+            kustomize build .
