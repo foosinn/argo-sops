@@ -11,5 +11,5 @@ spec:
       - "-c"
       - |
         set -euo pipefail
-        grep -r ^sops:$ -l -Z | xargs -0 -n1 sops decrypt -i
+        grep -r ^sops:$ -l -Z | xargs -0 -n1 -r sops decrypt -i
         kustomize build --enable-helm .
